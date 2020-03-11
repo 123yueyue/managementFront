@@ -14,14 +14,14 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_INTRODUCTION: (state, introduction) => {
-    state.introduction = introduction
+  SET_USERNAME: (state, userName) => {
+    state.userName = userName
   },
-  SET_NAME: (state, name) => {
-    state.name = name
+  SET_ID: (state, id) => {
+    state.id = id
   },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
+  SET_ACCOUNT: (state, account) => {
+    state.account = account
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
