@@ -2,7 +2,7 @@ export default {
   route: {
     dashboard: '首页',
     documentation: '学校管理',
-    guide: '引导页',
+    guide: '学院管理',
     permission: '权限测试页',
     rolePermission: '角色权限',
     pagePermission: '页面权限',
