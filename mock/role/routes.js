@@ -22,11 +22,11 @@ export const constantRoutes = [
     component: 'views/login/auth-redirect',
     hidden: true
   },
-  {
-    path: '/404',
-    component: 'views/error-page/404',
-    hidden: true
-  },
+  // {
+  //   path: '/404',
+  //   component: 'views/error-page/404',
+  //   hidden: true
+  // },
   {
     path: '/401',
     component: 'views/error-page/401',
@@ -373,13 +373,13 @@ export const asyncRoutes = [
         component: 'views/error-page/401',
         name: 'Page401',
         meta: { title: 'page401', noCache: true }
-      },
-      {
-        path: '404',
-        component: 'views/error-page/404',
-        name: 'Page404',
-        meta: { title: 'page404', noCache: true }
       }
+      // {
+      //   path: '404',
+      //   component: 'views/error-page/404',
+      //   name: 'Page404',
+      //   meta: { title: 'page404', noCache: true }
+      // }
     ]
   },
 
