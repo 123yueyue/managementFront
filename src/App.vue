@@ -9,3 +9,12 @@ export default {
   name: 'App'
 }
 </script>
+<style>
+#app {
+  background-color: #eee;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+</style>

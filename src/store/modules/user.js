@@ -5,6 +5,7 @@ import router, { resetRouter } from '@/router'
 const state = {
   token: getToken(),
   name: '',
+  id: '',
   avatar: '',
   introduction: '',
   roles: []
@@ -78,6 +79,7 @@ const actions = {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
+        commit('SET_ID', '')
         removeToken()
         resetRouter()
 

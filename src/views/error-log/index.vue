@@ -15,7 +15,7 @@
           style="width: 700px;"
           class="form"
         >
-          <el-form-item label="姓名" prop="className">
+          <el-form-item label="姓名" prop="userName">
             <el-input v-model="form.userName" placeholder="请输入姓名" />
           </el-form-item>
           <el-form-item label="账号" prop="account">
@@ -27,7 +27,7 @@
           <el-form-item label="重复密码" prop="checkPassword">
             <el-input v-model="form.checkPassword" type="password" placeholder="请再次输入密码" />
           </el-form-item>
-          <el-form-item label="所属学校" prop="value">
+          <el-form-item label="所属学校" prop="adminId">
             <el-select v-model="form.adminId" placeholder="请选择所属学校">
               <el-option
                 v-for="item in schooloptions"
@@ -37,7 +37,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="所属学院" prop="value">
+          <el-form-item label="所属学院" prop="institutionId">
             <el-select v-model="form.institutionId" placeholder="请选择所属学院">
               <el-option
                 v-for="item in institutionoptions"
@@ -47,7 +47,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="所属班级" prop="value">
+          <el-form-item label="所属班级" prop="classId">
             <el-select v-model="form.classId" placeholder="请选择所属学院">
               <el-option
                 v-for="item in classoptions"
@@ -57,7 +57,13 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="简介" prop="email">
+          <el-form-item label="电话" prop="phone">
+            <el-input v-model="form.phone" />
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="form.email" />
+          </el-form-item>
+          <el-form-item label="简介" prop="summary">
             <el-input v-model="form.summary" />
           </el-form-item>
           <el-form-item>
@@ -137,12 +143,33 @@ export default {
   data() {
     // 校验账号
     var checkAccout = (rule, value, callback) => {
-      if (this.title === '新建班级') {
-        this.$store.dispatch('class/checkName', value).then(resp => {
+      if (this.title === '新建学生') {
+        this.$store.dispatch('student/checkName', value).then(resp => {
           if (resp.status === 1) {
-            callback(new Error('该班级名称已存在'))
+            callback(new Error('该账号已存在'))
           }
         })
+      } else {
+        callback()
+      }
+    }
+    // 校验密码
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'))
+      } else {
+        if (this.form.checkPassword !== '') {
+          this.$refs.form.validateField('checkPassword')
+        }
+        callback()
+      }
+    }
+    // 校验是否一致
+    var validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.form.prePassword) {
+        callback(new Error('两次输入密码不一致!'))
       } else {
         callback()
       }
@@ -165,6 +192,8 @@ export default {
         email: '',
         account: '',
         password: '',
+        prePassword: '',
+        checkPassword: '',
         summary: ''
       },
       listQuery: {
@@ -179,6 +208,27 @@ export default {
       total: 0,
       subtitle: '立即创建',
       rules: {
+        userName: [
+          {
+            required: true,
+            trigger: 'blur',
+            message: '登录账号不能为空'
+          },
+          {
+            trigger: 'blur',
+            message: '姓名不能为空'
+          },
+          {
+            max: 8,
+            min: 2,
+            trigger: 'blur',
+            message: '用户姓名必须大于两位且小于八位'
+          },
+          {
+            pattern: /^[\u0391-\uFFE5A-Za-z0-9]+$/,
+            message: '请输入中英文或数字'
+          }
+        ],
         account: [
           {
             required: true,
@@ -200,21 +250,82 @@ export default {
             message: '请输入中英文或数字'
           }
         ],
-        className: [
+        prePassword: [
           {
             required: true,
             trigger: 'blur',
-            message: '班级名称不能为空'
+            message: '密码不能为空'
           },
           {
-            max: 8,
-            min: 2,
+            max: 20,
+            min: 6,
             trigger: 'blur',
-            message: '用户姓名必须大于两位且小于八位'
+            message: '密码长度必须大于六位且小于二十位'
           },
           {
-            pattern: /^[\u0391-\uFFE5A-Za-z0-9]+$/,
-            message: '请输入中英文或数字'
+            validator: validatePass,
+            trigger: 'blur'
+          }
+        ],
+        checkPassword: [
+          {
+            validator: validatePass2,
+            trigger: 'blur'
+          },
+          {
+            required: true,
+            trigger: 'blur',
+            message: '请再次输入密码'
+          }
+        ],
+        phone: [
+          {
+            required: true,
+            trigger: 'blur',
+            message: '登录账号不能为空'
+          },
+          {
+            pattern: /^1[34578]\d{9}$/,
+            message: '请输入正确的电话号码',
+            trigger: 'blur'
+          }
+        ],
+        email: [
+          {
+            required: true,
+            trigger: 'blur',
+            message: '登录账号不能为空'
+          },
+          {
+            type: 'email',
+            trigger: 'blur',
+            message: '邮箱格式有误'
+          },
+          {
+            max: 32,
+            trigger: 'blur',
+            message: '邮箱长度不得大于32位'
+          }
+        ],
+        adminId: [
+          {
+            required: true,
+            trigger: 'blur',
+            message: '所属学校不能为空'
+          }
+        ],
+        institutionId: [
+          {
+            required: true,
+            trigger: 'blur',
+            message: '所属学院不能为空'
+          }
+        ],
+        classId: [
+          {
+            required: true,
+            trigger: 'blur',
+            message: '所属班级不能为空'
           }
         ]
       }
@@ -224,6 +335,11 @@ export default {
     this.getDataList()
     if (this.title === '编辑学生') {
       this.subtitle = '立即修改'
+      this.rules.prePassword = [{ trigger: 'blur', message: '密码不能为空' },
+        { max: 20, min: 6, trigger: 'blur', message: '密码长度必须大于六位且小于二十位' },
+        { validator: this.editValidatePass, trigger: 'blur' }]
+      this.rules.checkPassword = [{ validator: this.editValidatePass2, trigger: 'blur' },
+        { trigger: 'blur', message: '请再次输入密码' }]
     } else {
       this.subtitle = '立即创建'
     }
@@ -271,7 +387,7 @@ export default {
     },
     // 新增学生
     handleAdd() {
-      this.title = '新建班级'
+      this.title = '新建学生'
       this.action = 'add'
       this.subtitle = '立即创建'
       this.$store.dispatch('institution/getSchoolList').then(response => {
@@ -280,28 +396,31 @@ export default {
       this.$store.dispatch('class/getInstitutionList').then(response => {
         this.institutionoptions = response.responsePageInfo.list
       })
+      this.$store.dispatch('student/getClassList').then(response => {
+        this.classoptions = response.responsePageInfo.list
+      })
     },
-    // 添加班级
+    // 添加学生
     submitForm(form) {
-      if (this.title === '编辑班级') {
+      if (this.title === '编辑学生') {
         this.$refs.form.validate(valid => {
           if (valid) {
-            this.$store.dispatch('class/updateClass', this.form).then(() => {
+            this.$store.dispatch('student/updateStudent', this.form).then(() => {
               this.action = 'list'
-              this.title = '班级列表'
+              this.title = '学生列表'
               this.getDataList()
             })
           } else {
-            console.log('编辑班级失败!')
+            console.log('编辑学生失败!')
             return false
           }
         })
       } else {
         this.$refs.form.validate(valid => {
           if (valid) {
-            this.$store.dispatch('class/addClass', this.form).then(() => {
+            this.$store.dispatch('student/addStudent', this.form).then(() => {
               this.action = 'list'
-              this.title = '班级列表'
+              this.title = '学生列表'
               this.getDataList()
             })
           } else {

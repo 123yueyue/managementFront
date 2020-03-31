@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+import Student from '@/views/student/index'
 
 /* Router Modules */
 // import componentsRouter from './modules/components'
@@ -81,6 +82,19 @@ export const constantRoutes = [
         name: 'Dashboard',
         meta: { title: 'dashboard', icon: 'dashboard', affix: true }
       }
+    ]
+  },
+  {
+    path: '/student',
+    component: Student,
+    children: [
+      { path: '/', component: () => import('@/views/student/info') },
+      { path: '/apply', component: () => import('@/views/student/apply') },
+      { path: '/detail', component: () => import('@/views/student/detail') }
+      // {path: '/examMsg', component: () => import('@/components/student/examMsg')},
+      // {path: '/message', component: () => import('@/components/student/message')},
+      // {path: '/studentScore', component: () => import("@/components/student/answerScore")},
+      // {path: '/scoreTable', component: () => import("@/components/student/scoreTable")}
     ]
   },
   {

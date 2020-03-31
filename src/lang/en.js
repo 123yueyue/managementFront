@@ -48,7 +48,7 @@ export default {
     articleList: 'Article List',
     errorPages: 'Error Pages',
     page401: '401',
-    page404: '404',
+    // page404: '404',
     errorLog: 'Error Log',
     excel: 'Excel',
     exportExcel: 'Export Excel',
